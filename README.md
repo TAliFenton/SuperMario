@@ -1,2 +1,4 @@
 # Super-Mario-Bros
-Simulate the first level of Super Mario Bros original game.
+Simulate some of the basic characteristics of the first level of Super Mario Bros.
+
+For this project, we are using SFML along with Visual Studio 2015 and XCode.
