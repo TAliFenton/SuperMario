@@ -51,7 +51,7 @@ void Player::moveLeft() {
 void Player::moveRight() {
 	rectPlayer.top = 0;
 	//if the previous key pressed was left, change the sprite's x-coordinate's starting point
-	if (direction == left || rectPlayer.left == (95 * 5)) {
+	if (direction == left || rectPlayer.left == (95*5)) {
 		rectPlayer.left = 0;
 	}
 	if (clock.getElapsedTime().asSeconds() > 0.05f) {
@@ -80,7 +80,7 @@ void Player::idle() {
 	pSprite.setTextureRect(rectPlayer);
 }
 
-void Player::draw(sf::RenderWindow &window)
+void Player::draw(sf::RenderWindow &window) 
 {
 	window.draw(pSprite);
 }
