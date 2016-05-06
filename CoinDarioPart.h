@@ -1,3 +1,4 @@
+// making a comment
 #ifndef COIN_H
 #define COIN_H
 #include "Player.h"
@@ -16,3 +17,4 @@ public:
 };
 
 #endif
+
