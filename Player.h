@@ -1,7 +1,7 @@
 #pragma once
 #ifndef PLAYER_H
 #define PLAYER_H
-#include <SFML/Graphics.hpp>
+#include "Coin.h"
 
 class Player {
 	private:
@@ -21,7 +21,9 @@ class Player {
 		Player();
 		void moveLeft();
 		void moveRight();
-		//void update(float dt);
+		void addCoinCount();
+		int getCoinCount() const { return coinCount; }
+		bool checkIfCoinIsTouched(Coin p);
 		void draw(sf::RenderWindow &window);
 		void checkIsAlive(bool isAlive);
 		void idle();

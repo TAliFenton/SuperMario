@@ -4,7 +4,7 @@ using namespace std;
 
 Player::Player()
 {
-	if (!pTexture.loadFromFile("MarioMoves.png"))
+	if (!pTexture.loadFromFile("images/MarioMoves.png"))
 		cout << "The player sprite cannot be loaded.\n";
 	//IntRect objects hold 4 parameters: (Left/x-coordinate, Top/y-coordinate, Width, Height)
 	rectPlayer.left = 0;
@@ -69,7 +69,9 @@ void Player::moveRight() {
 	direction = right;
 	cout << "(" << rectPlayer.top << ", " << rectPlayer.left << ")" << endl;
 }
-
+void Player::addCoinCount() {
+	coinCount += 1;
+}
 void Player::idle() {
 	if (direction == right) {
 		rectPlayer.left = 95 * 5;
@@ -80,7 +82,12 @@ void Player::idle() {
 	pSprite.setTextureRect(rectPlayer);
 }
 
-void Player::draw(sf::RenderWindow &window) 
+bool Player::checkIfCoinIsTouched(Coin p)
+{
+	return (pSprite.getGlobalBounds().intersects(p.getSpriteRect()));
+}
+
+void Player::draw(sf::RenderWindow &window)
 {
 	window.draw(pSprite);
 }

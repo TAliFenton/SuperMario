@@ -4,7 +4,7 @@
 using namespace std;
 
 Enemy::Enemy(){
-   if(!pTexture.loadFromFile(resourcePath()+"enemy.png"))
+   if(!pTexture.loadFromFile("images/enemy.png"))
        cout << "Could not load image from file" << endl;
     rectPlayer.left = 0;
     rectPlayer.top = 0;
