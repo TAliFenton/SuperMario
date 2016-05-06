@@ -1,91 +1,71 @@
-
-//
-// Disclamer:
-// ----------
-//
-// This code will work only if you selected window, graphics and audio.
-//
-// Note that the "Run Script" build phase will copy the required frameworks
-// or dylibs to your application bundle so you can execute it on any OS X
-// computer.
-//
-// Your resource files (images, sounds, fonts, ...) are also copied to your
-// application bundle. To get the path to these resource, use the helper
-// method resourcePath() from ResourcePath.hpp
-//
-
-#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-
+#include "enemy.hpp"
 // Here is a small helper for you ! Have a look.
 #include "ResourcePath.hpp"
+#include <iostream>
+using namespace std;
 
-int main(int, char const**)
-{
-    // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
-
-    // Set the Icon
-    sf::Image icon;
-    if (!icon.loadFromFile(resourcePath() + "icon.png")) {
-        return EXIT_FAILURE;
-    }
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-
-    // Load a sprite to display
-    sf::Texture texture;
-    if (!texture.loadFromFile(resourcePath() + "cute_image.jpg")) {
-        return EXIT_FAILURE;
-    }
-    sf::Sprite sprite(texture);
-
-    // Create a graphical text to display
-    sf::Font font;
-    if (!font.loadFromFile(resourcePath() + "sansation.ttf")) {
-        return EXIT_FAILURE;
-    }
-    sf::Text text("Hello SFML", font, 50);
-    text.setColor(sf::Color::Black);
-
-    // Load a music to play
-    sf::Music music;
-    if (!music.openFromFile(resourcePath() + "nice_music.ogg")) {
-        return EXIT_FAILURE;
-    }
-
-    // Play the music
-    music.play();
-
-    // Start the game loop
-    while (window.isOpen())
-    {
-        // Process events
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // Close window: exit
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-
-            // Escape pressed: exit
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-                window.close();
-            }
+int main(){
+    int i = 0;
+    sf::Clock clock;
+    Enemy goomba;
+    sf::IntRect box;
+    sf::Texture aT;
+    sf::Sprite a;
+    if(!aT.loadFromFile(resourcePath()+"images.png"))
+        cout << "Could not load image from file" << endl;
+    box.left = 400;
+    box.top = 0;
+    box.width = 300;
+    box.height = 248;
+    a.setTexture(aT);
+    a.setTextureRect(box);
+    a.setScale(.4,.4);
+    a.move(500,0);//have to mive the sprite 100 more than box
+    int j =0;
+    sf::RenderWindow Window(sf::VideoMode(800, 450), "Super Mario Bros.");
+    
+    while (Window.isOpen()){ //the game loop
+        sf::Time time = clock.getElapsedTime();
+        sf::Event Event; //We need an Event loop to let the user interact with the game.
+        //An event can be anything from typing, moving the mouse, etc.
+        
+        while(Window.pollEvent(Event)){
+            if(Event.type == sf::Event::Closed)
+                Window.close();
         }
-
-        // Clear screen
-        window.clear();
-
-        // Draw the sprite
-        window.draw(sprite);
-
-        // Draw the string
-        window.draw(text);
-
-        // Update the window
-        window.display();
+        
+        if(goomba.isIntersecting(box) == true){
+            cout << "Object Collision" << endl;
+            if(goomba.getSprite().getPosition().x >= 400)
+                i++;
+            else
+                i++;
+        }
+       /* if(goomba.isIntersecting(box) && box.getYlocation > starting location)
+        {
+            goomba.setDead();
+        }*/
+        if(i % 2 == 0){
+            if(goomba.getSprite().getPosition().x < 800)
+                goomba.moveRight();
+            else
+                i++;
+        }
+        
+        if(i % 2 != 0){
+            if(goomba.getSprite().getPosition().x > 0)
+                goomba.moveLeft();
+            else
+                i++;
+        }
+        clock.restart().asMilliseconds();
+        
+        //default of display function's default color is black
+        Window.clear();
+        Window.draw(a);
+        goomba.draw(Window);
+        Window.display();
     }
-
-    return EXIT_SUCCESS;
+    return 0;
 }
