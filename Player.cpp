@@ -4,7 +4,7 @@ using namespace std;
 
 Player::Player()
 {
-	if (!pTexture.loadFromFile("MarioMoves.png"))
+	if (!pTexture.loadFromFile("images/MarioMoves.png"))
 		cout << "The player sprite cannot be loaded.\n";
 	//IntRect objects hold 4 parameters: (Left/x-coordinate, Top/y-coordinate, Width, Height)
 	rectPlayer.left = 0;
@@ -20,6 +20,12 @@ Player::Player()
 	isAlive = true;
 	playerLives = 3;
 	coinCount = 0;
+
+	//Dario Stuff:
+	jumpValue= 500;
+	gravityAcceleration = 15;
+	marioMass = 60;
+	speedValue = 0;
 }
 
 Player::~Player()
@@ -51,7 +57,7 @@ void Player::moveLeft() {
 void Player::moveRight() {
 	rectPlayer.top = 0;
 	//if the previous key pressed was left, change the sprite's x-coordinate's starting point
-	if (direction == left || rectPlayer.left == (95 * 5)) {
+	if (direction == left || rectPlayer.left == (95*5)) {
 		rectPlayer.left = 0;
 	}
 	if (clock.getElapsedTime().asSeconds() > 0.05f) {
@@ -69,7 +75,9 @@ void Player::moveRight() {
 	direction = right;
 	cout << "(" << rectPlayer.top << ", " << rectPlayer.left << ")" << endl;
 }
-
+void Player::addCoinCount() {
+	coinCount += 1;
+}
 void Player::idle() {
 	if (direction == right) {
 		rectPlayer.left = 95 * 5;
@@ -80,7 +88,39 @@ void Player::idle() {
 	pSprite.setTextureRect(rectPlayer);
 }
 
+bool Player::checkIfCoinIsTouched(Coin p)
+{
+	return (pSprite.getGlobalBounds().intersects(p.getSpriteRect()));
+}
+
 void Player::draw(sf::RenderWindow &window)
 {
 	window.draw(pSprite);
+}
+
+//Dario Stuff:
+
+void Player::setPosition(int x, int y)
+{
+	pSprite.setPosition(x, y);
+
+}
+
+int Player::getPositionX()
+{
+	return pSprite.getPosition().x;
+
+}
+
+int Player::getPositionY()
+{
+	return pSprite.getPosition().y;
+
+}
+
+void Player::jump(float deltaTime)
+{
+	speedValue -= gravityAcceleration * deltaTime;// by this is what makes mario go up in air
+	pSprite.move(0, -speedValue);// setting up the sprite value to move accordingly
+
 }
