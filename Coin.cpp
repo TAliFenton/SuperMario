@@ -21,12 +21,8 @@ void Coin::setPosition(int x, int y) {
 	cSprite.move(x, y);
 }
 
-Coin::~Coin()
-{
-}
-
 void Coin::setIsVisible(bool vis) {
-	isVisible = vis; 
+	isVisible = vis;
 	rectCoin.width = 0;
 	rectCoin.height = 0;
 	cSprite.setTextureRect(rectCoin);

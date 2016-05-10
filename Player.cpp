@@ -20,6 +20,12 @@ Player::Player()
 	isAlive = true;
 	playerLives = 3;
 	coinCount = 0;
+
+	//Dario Stuff:
+	jumpValue= 500;
+	gravityAcceleration = 15;
+	marioMass = 60;
+	speedValue = 0;
 }
 
 Player::~Player()
@@ -90,4 +96,31 @@ bool Player::checkIfCoinIsTouched(Coin p)
 void Player::draw(sf::RenderWindow &window)
 {
 	window.draw(pSprite);
+}
+
+//Dario Stuff:
+
+void Player::setPosition(int x, int y)
+{
+	pSprite.setPosition(x, y);
+
+}
+
+int Player::getPositionX()
+{
+	return pSprite.getPosition().x;
+
+}
+
+int Player::getPositionY()
+{
+	return pSprite.getPosition().y;
+
+}
+
+void Player::jump(float deltaTime)
+{
+	speedValue -= gravityAcceleration * deltaTime;// by this is what makes mario go up in air
+	pSprite.move(0, -speedValue);// setting up the sprite value to move accordingly
+
 }

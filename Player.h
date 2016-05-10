@@ -16,6 +16,10 @@ class Player {
 		bool isAlive;
 		unsigned int playerLives;
 		unsigned int coinCount;
+		//Dario Stuff:
+		float jumpValue;// how many pixels go up
+		float gravityAcceleration;// the acceleration to gravity which brings the player back down
+		float marioMass;// the weight of mario
 	public:
 		//overloaded constructor:
 		Player();
@@ -27,8 +31,19 @@ class Player {
 		void draw(sf::RenderWindow &window);
 		void checkIsAlive(bool isAlive);
 		void idle();
+
+		//Dario Stuff:
+		float speedValue; //how fast he jumps and ocmes back down to the ground
+		void setPosition(int x, int y);
+		int getPositionX();
+		int getPositionY();
+		void jump(float deltaTime);
+
+		//accesors
+		sf::Sprite getPlayerSprite() const { return pSprite; }
+		float getJumpValue() const { return jumpValue; }
+		float getMarioMass() const { return marioMass; }
 		~Player();
 };
 
 #endif
-

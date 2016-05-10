@@ -10,7 +10,7 @@ class Coin
 		sf::Sprite cSprite;
 	public:
 		Coin();
-		~Coin();
+		void setIsVisible(bool vis);
 		void setPosition(int x, int y);
 		void draw(sf::RenderWindow &window);
 };
