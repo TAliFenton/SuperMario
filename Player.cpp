@@ -22,7 +22,7 @@ Player::Player()
 	coinCount = 0;
 
 	//Dario Stuff:
-	jumpValue= 500;
+	jumpValue = 500;
 	gravityAcceleration = 15;
 	marioMass = 60;
 	speedValue = 0;
@@ -57,7 +57,7 @@ void Player::moveLeft() {
 void Player::moveRight() {
 	rectPlayer.top = 0;
 	//if the previous key pressed was left, change the sprite's x-coordinate's starting point
-	if (direction == left || rectPlayer.left == (95*5)) {
+	if (direction == left || rectPlayer.left == (95 * 5)) {
 		rectPlayer.left = 0;
 	}
 	if (clock.getElapsedTime().asSeconds() > 0.05f) {
@@ -88,9 +88,10 @@ void Player::idle() {
 	pSprite.setTextureRect(rectPlayer);
 }
 
-bool Player::checkIfCoinIsTouched(Coin p)
+bool Player::checkIfCoinIsTouched(Coin c)
 {
-	return (pSprite.getGlobalBounds().intersects(p.getSpriteRect()));
+	//Fix getSpriteRect()
+	return (pSprite.getGlobalBounds().intersects(c.getSpriteBounds()));
 }
 
 void Player::draw(sf::RenderWindow &window)
