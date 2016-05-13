@@ -8,11 +8,21 @@ using namespace std;
 
 int main()
 {
+	sf::SoundBuffer clear;
+	sf::SoundBuffer coin1;
+	sf::SoundBuffer jump1;
+	sf::SoundBuffer flag2;
+	sf::Sound coinSound;
+	sf::Sound jumpSound;
+	sf::Sound downFlag;
+	sf::Sound stageClear;
 	sf::Music music;
 	sf::Vector2f screenDimensions(800, 450);// vector to store our screen dimensions
 	sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "View Port");
 	sf::Texture texture;// texture in order
 	sf::Texture title;
+	sf::Texture flag;
+	sf::Sprite Flag1;
 	sf::Sprite title1;
 	sf::Sprite sprite;
 	sf::View view;// we need to be able to move our screen along our game
@@ -58,11 +68,20 @@ int main()
 	c[10].setPosition(2080 * 2, 73 * 2);
 	c[11].setPosition(2722 * 2, 138 * 2);
 
+	if (!coin1.loadFromFile("images/coinSound.wav") || !jump1.loadFromFile("images/jumpSound.wav") || !flag2.loadFromFile("images/downFlagpole.wav") || !clear.loadFromFile("images/stageClear.wav"))
+		cout << "Could not load sound effects\n";
+
 	if (!music.openFromFile("images/marioSong.ogg"))// import mario theme song
 		cout << "Could not load file\n";
 
-	if (!texture.loadFromFile("images/NES2.png") || !title.loadFromFile("images/marioTitle6.png"))// import our background and our main mario page
+	if (!texture.loadFromFile("images/NES2.png") || !title.loadFromFile("images/marioTitle6.png")|| !flag.loadFromFile("images/marioFlag6.png"))// import our background and our main mario page
 		cout << "Could not load file\n";
+
+	coinSound.setBuffer(coin1);
+	jumpSound.setBuffer(jump1);
+	downFlag.setBuffer(flag2);
+	stageClear.setBuffer(clear);
+
 	/*
 	sf::RectangleShape rect(sf::Vector2f(40, 40));
 	rect.setFillColor(sf::Color::Red);
@@ -81,6 +100,10 @@ int main()
 
 	title1.setTexture(title);
 	title1.setScale(.6, .6);
+
+	Flag1.setTexture(flag);
+	Flag1.setScale(.5, .5);
+	Flag1.setPosition(3157 * 2, 41 * 2);
 
 
 	sf::Vector2f position(0, 0);// this vector will keep track of the position of our screen
@@ -105,12 +128,12 @@ int main()
 		window.clear();
 
 	}
-
-	//music.play();// start game music as soon as game starts
+	music.play();// start game music as soon as game starts
 	while (window.isOpen())// game loop
 	{
+
 		deltaTime = delta.restart().asSeconds();
-		cout << "Mario's Position: " << Mario.getPositionX() << endl;
+		//cout << "Mario's Position: " << Mario.getPositionX() << endl;
 		while (window.pollEvent(event))// check for events
 		{
 			if (event.type == sf::Event::Closed)// if you would like to close the window
@@ -119,13 +142,35 @@ int main()
 		}
 
 		//*********************************** Mario ***********************************
-		if (Mario.getPositionX() >= 3172 * 2)// When Mario reaches the flag
+		if (Mario.getPositionX() >= 3167 * 2)// When Mario reaches the flag
 		{
+			music.stop();
+
+			downFlag.play();
+
+			while (Flag1.getPosition().y < 345)
+			{
+				cout << " Mario PositionX: " << Mario.getPositionX() << " Mario PositionY: " << Mario.getPositionY() << endl;
+				Flag1.move(0, 2);
+
+				if (Mario.getPositionY() < 345)
+					Mario.moveDown();
+
+
+				window.draw(sprite);// display the background
+				window.setView(view);// display the view
+				Mario.draw(window);
+				window.draw(Flag1);
+				window.display();
+				window.clear();
+
+			}
+			stageClear.play();
 			while (Mario.getPositionX() == 3172 * 2 || Mario.getPositionX() <= 3272 * 2)// this loop will run as long as mario has reaches the flag, and the position of mario is less than the position of the entrance of the castle
 			{
-				cout << "Here is the flag\n";
+				//cout << "Here is the flag\n";
 				Mario.moveRight();                 //rect.move(2, 0);//* clock.getElapsedTime().asSeconds();// move mario by itself until it reaches the entrance of castle
-				cout << "After supposedly moving the block by itself\n";
+				//cout << "After supposedly moving the block by itself\n";
 				while (Mario.getPositionX() >= 3270 * 2)//once the position of mario is equal to the entrance of the castle then we will draw our terrain and everything except for Mario to simulate that he has gone inside the castle
 				{
 					while (window.pollEvent(event))// check for events
@@ -160,6 +205,7 @@ int main()
 		{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))//if mario is on the ground
 			{
+				jumpSound.play();
 				Mario.speedValue = Mario.getJumpValue() / Mario.getMarioMass();//mario is going to go up this amount of pixels
 				whileJump = true;// set whileJump to true knowing its in the air
 			}
@@ -167,6 +213,8 @@ int main()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))// if right arrow is pressed
 		{
+
+			cout << " Mario PositionX: " << Mario.getPositionX() << " Mario PositionY: " << Mario.getPositionY() << endl;
 			Mario.moveRight();// move mario
 
 
@@ -217,65 +265,31 @@ int main()
 		for (int i = 0; i < 12; i++) {
 			if (Mario.checkIfCoinIsTouched(c[i]) && c[i].getIsVisible()) {
 				Mario.addCoinCount();
+				coinSound.play();
 				cout << "Number of Coins: " << Mario.getCoinCount() << endl;
 				c[i].setIsVisible(false);
 			}
 		}
 		//***************************************** End Of Mario ***********************************************
 
-		cout << "is is" << i << endl;
 
 		//******************************************** Goomba **************************************************
-		for (int j = 0; j < 12; j++) {
-			if ((e[j].isIntersectingX(Mario.getPositionX())) && (e[j].isIntersectingY(Mario.getPositionY()))) {
-				//for Goomba to die, Mario has to hit it on top. y would always equal to zero while can be any value.
-				//otherwise, Mario dies.
-				cout << "Goes here" << endl;
-				e[j].setDead(window);
-				e[j].setIsDead(true);
-				for (int i = 0; i < 1; i++);//shows the dead goomba for a few seconds then it will disappear
-				e[j].setIsVisible(false);
-			}
-		}
-
-		//changes the position depending if it has to go right
-		/*for(int j = 0; j < 12; j++){
-		if(i % 2 == 0){
-		if(e[j].getSprite().getPosition().x < 3392){
-		e[j].moveRight();
-		}else
-		i++;
-		}
-		}
-
-		//changes the position depending if it has to go left
 		for(int j = 0; j < 12; j++){
-		if(i % 2 != 0){
-		if(e[j].getSprite().getPosition().x > 0){
-		e[j].moveLeft();
-		}else
-		i++;
-		}
-		}*/
-
-		cout << " fell" << e[0].getDirection() << endl;
-		for (int j = 0; j < 12; j++)
-		{
-			cout << "sprite postion is " << e[j].getSprite().getPosition().x << endl;
-			if ((e[j].getSprite().getPosition().x > 5000 || (e[j].getDirection() == 0)) && e[j].getSprite().getPosition().x > 0)
-			{
-				cout << "Moves left" << endl;
-				e[j].moveLeft();
-			}
-			else if (e[j].getSprite().getPosition().x <= 0 || e[j].getDirection() == 1)
-			{
-				cout << "moves right" << endl;
-				e[j].moveRight();
-			}
-
+				if((e[j].isIntersectingX(Mario.getPositionX()))&& (e[j].isIntersectingY(Mario.getPositionY()))){ //checks if enemy is hit by mario
+						e[j].setDead(window);
+						e[j].setIsDead(true);
+						e[j].setIsVisible(false);
+				}
 		}
 
-
+		//Moves the enemy either left or right
+		for(int j = 0; j < 12 ; j++){
+				//cout <<"sprite postion is " << e[j].getSprite().getPosition().x << endl;
+				if((e[j].getSprite().getPosition().x > 5000 || (e[j].getDirection() == 0)) && e[j].getSprite().getPosition().x > 0) //move the enemy left. 5000 is the boundary for the right side
+						e[j].moveLeft();
+				else if(e[j].getSprite().getPosition().x <= 0|| e[j].getDirection() == 1) // moves the enemy right
+						e[j].moveRight();
+		}
 		//***************************************** End Of Goomba ***********************************************
 
 		// disregard this
@@ -315,6 +329,7 @@ int main()
 				e[i].draw(window);
 		}
 		Mario.draw(window);
+		window.draw(Flag1);
 		window.display();
 		window.clear();
 	}//end of game loop
@@ -322,5 +337,3 @@ int main()
 
 	return 0;
 }
-
-

@@ -12,13 +12,13 @@ Coin::Coin()
 	rectCoin.height = 55;
 	cSprite.setTexture(cTexture);
 	cSprite.setTextureRect(rectCoin);
-	cSprite.move(350, 350);
+	cSprite.setPosition(350, 350);
 	cSprite.setScale(.4, .4);
 	isVisible = true;
 }
 
 void Coin::setPosition(int x, int y) {
-	cSprite.move(x, y);
+	cSprite.setPosition(x, y);
 }
 
 void Coin::setIsVisible(bool vis) {
