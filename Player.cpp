@@ -52,7 +52,7 @@ void Player::moveLeft() {
 		clock.restart();
 		direction = left;
 	}
-	cout << "(" << rectPlayer.top << ", " << rectPlayer.left << ")" << endl;
+	//cout << "(" << rectPlayer.top << ", " << rectPlayer.left << ")" << endl;
 }
 void Player::moveRight() {
 	rectPlayer.top = 0;
@@ -73,8 +73,16 @@ void Player::moveRight() {
 		clock.restart();
 	}
 	direction = right;
-	cout << "(" << rectPlayer.top << ", " << rectPlayer.left << ")" << endl;
+	//cout << "(" << rectPlayer.top << ", " << rectPlayer.left << ")" << endl;
 }
+
+void Player::moveDown()
+{
+	idle();
+	pSprite.move(0, 1);
+
+}
+
 void Player::addCoinCount() {
 	coinCount += 1;
 }

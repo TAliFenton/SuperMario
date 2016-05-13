@@ -26,6 +26,7 @@ class Player {
 		Player();
 		void moveLeft();
 		void moveRight();
+		void moveDown();
 		void addCoinCount();
 		int getCoinCount() const { return coinCount; }
 		bool checkIfCoinIsTouched(Coin c);
