@@ -21,7 +21,7 @@ public:
 	//***********************************************************
 	void setIsDead(bool dead) { isDead = dead; }
 	int getDirection()const { return direction; }
-	bool getIsDead()const { return isDead; }
+	bool getIsDead() const { return isDead; }
 	void setDead(sf::RenderWindow& Window);
 	//Precondition:
 	//Postcondition:
@@ -69,7 +69,7 @@ public:
 	//Precondition:
 	//Postcondition:
 	//***********************************************************
-	void setPosition(float x, float y);
+	void setPosition(int x, int y);
 };
 
 #endif /* enemy_hpp */
