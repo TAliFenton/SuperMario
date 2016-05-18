@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <iostream>
+#include<cmath>
 using namespace std;
 
 Player::Player()
@@ -14,7 +15,9 @@ Player::Player()
 	pSprite.setTexture(pTexture);
 	pSprite.setTextureRect(rectPlayer);
 	//I added "playerImage.move(0, 350);" because I want to have Mario start at those specific coordinates [0, 350] instead of having it at the default which is (0, 0) [the upper left corner of the window]
-	pSprite.move(0, 350);
+	rect.setPosition(0, 300);
+	pSprite.setPosition(rect.getPosition().x, rect.getPosition().y);
+	//rect.setSize(sf::Vector2f(95,142 / 2));
 	pSprite.setScale(.4, .4);
 	direction = right;
 	isAlive = true;
@@ -24,12 +27,65 @@ Player::Player()
 	//Dario Stuff:
 	jumpValue = 500;
 	gravityAcceleration = 15;
-	marioMass = 60;
+	marioMass = 55;
 	speedValue = 0;
+
+
+
+	rect.setSize(sf::Vector2f(95 * .4, 142 * .4));
+	rect.setFillColor(sf::Color::Blue);
+
+	TopRect.setSize(sf::Vector2f(3 * 2, 12 * 2));
+
+
+	LeftRect.setSize(sf::Vector2f(15 * 2, 3 * 2));
+
+
+	RightRect.setSize(sf::Vector2f(15 * 2, 3 * 2));
+	
+
+	BottomRect.setSize(sf::Vector2f(3 * 2, 12 * 2));
+
+
+	TopRect.setPosition(rect.getPosition().x + rect.getSize().x / 2, rect.getPosition().y);
+
+	LeftRect.setPosition(rect.getPosition().x, rect.getPosition().y + rect.getSize().y / 2);
+
+
+	RightRect.setPosition(rect.getPosition().x + rect.getSize().x, rect.getPosition().y + rect.getSize().y / 2);
+
+	BottomRect.setPosition(rect.getPosition().x + rect.getSize().x / 2, rect.getPosition().y + rect.getSize().y);
+
+	LeftRect.setFillColor(sf::Color::Red);
+	RightRect.setFillColor(sf::Color::Blue);
+	BottomRect.setFillColor(sf::Color::Black);
+	TopRect.setFillColor(sf::Color::Yellow);
+
 }
 
 Player::~Player()
 {
+
+}
+void Player::rectSetPosition(int x, int y)
+{
+	rect.setPosition(x, y);
+
+}
+
+void Player::update()//update the position of the rectangles
+{
+
+
+	TopRect.setPosition(rect.getPosition().x + rect.getSize().x / 2 - 3, rect.getPosition().y - TopRect.getSize().y);
+
+	LeftRect.setPosition(rect.getPosition().x - LeftRect.getSize().x, rect.getPosition().y + rect.getSize().y / 2);
+
+
+	RightRect.setPosition(rect.getPosition().x + rect.getSize().x, rect.getPosition().y + rect.getSize().y / 2);
+
+	BottomRect.setPosition(rect.getPosition().x + rect.getSize().x / 2 - 3, rect.getPosition().y + rect.getSize().y);
+	
 
 }
 
@@ -43,10 +99,12 @@ void Player::moveLeft() {
 		if (rectPlayer.left == (95 * 3)) {
 			rectPlayer.left = 95 * 5;
 			pSprite.move(-10, 0);
+			rect.move(-10, 0);
 		}
 		else {
 			rectPlayer.left -= 95;
 			pSprite.move(-10, 0);
+			rect.move(-10, 0);
 		}
 		pSprite.setTextureRect(rectPlayer);
 		clock.restart();
@@ -64,10 +122,12 @@ void Player::moveRight() {
 		if (rectPlayer.left == (95 * 2)) {
 			rectPlayer.left = 0;
 			pSprite.move(10, 0);
+			rect.move(10, 0);
 		}
 		else {
 			rectPlayer.left += 95;
 			pSprite.move(10, 0);
+			rect.move(10, 0);
 		}
 		pSprite.setTextureRect(rectPlayer);
 		clock.restart();
@@ -112,8 +172,9 @@ void Player::draw(sf::RenderWindow &window)
 void Player::setPosition(int x, int y)
 {
 	pSprite.setPosition(x, y);
-
+	rect.setPosition(x, y);
 }
+
 
 int Player::getPositionX()
 {
@@ -130,6 +191,49 @@ int Player::getPositionY()
 void Player::jump(float deltaTime)
 {
 	speedValue -= gravityAcceleration * deltaTime;// by this is what makes mario go up in air
-	pSprite.move(0, -speedValue);// setting up the sprite value to move accordingly
+
+		pSprite.move(0, -speedValue);// setting up the sprite value to move accordingly
+		rect.move(0, -speedValue);
+
+	
+}
+
+bool Player::checkCollisionTile(Tile p)// check collision with a tile
+{
+
+
+		if (BottomRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
+		{
+			rect.setPosition(rect.getPosition().x, p.mainRect.getPosition().y - 55);
+			pSprite.setPosition(rect.getPosition().x, p.mainRect.getPosition().y - 55);
+			return true;
+		}
+		//cout << "Before Top check if statement\n";
+		if (TopRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
+		{
+			rect.setPosition(rect.getPosition().x, p.mainRect.getPosition().y + p.mainRect.getSize().y + 70);
+			pSprite.setPosition(rect.getPosition().x, p.mainRect.getPosition().y + p.mainRect.getSize().y + 70);
+			return true;
+		}
+		//cout << "Before Left check if statement\n";
+		if (LeftRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
+		{
+			//cout << "Mario collides with left block\n";
+			rect.setPosition(p.mainRect.getPosition().x + p.mainRect.getSize().x + 10, rect.getPosition().y);
+			pSprite.setPosition(p.mainRect.getPosition().x + p.mainRect.getSize().x + 10, rect.getPosition().y);
+			return true;
+		}
+		//cout << "Before Right check if statement\n";
+		if (RightRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
+		{
+			rect.setPosition(p.mainRect.getPosition().x - 50, rect.getPosition().y);
+			pSprite.setPosition(p.mainRect.getPosition().x - 50, rect.getPosition().y);
+			return true;
+		}
+		
+		//cout<<"No collision in check collision tile\n";
+		return false;
+
+	
 
 }
