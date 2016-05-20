@@ -18,6 +18,7 @@ void goombaUpdatePosition(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5,
 void goombaDisplayScreen(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, sf::RenderWindow& w);
 void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::Text t4, sf::Text t5, sf::Text t6, sf::Text t7);
 void endGame(sf::RenderWindow& window);
+void restartGame(Player& m, sf::View& v, Enemy enemy[], Coin coin[]);
 
 int main()
 {
@@ -684,4 +685,33 @@ void endGame(sf::RenderWindow& window) {
 				window.close();
 		}
 	}
+}
+
+void restartGame(Player& m, sf::View& v, Enemy enemy[], Coin coin[])
+{
+	enemy[0].setPosition(500, 395);
+	enemy[1].setPosition(700, 395);
+	enemy[2].setPosition(800, 395);
+	enemy[3].setPosition(2550, 395);
+	enemy[4].setPosition(2950, 395);
+
+	coin[0].setPosition(257 * 2, 130 * 2);
+	coin[1].setPosition(354 * 2, 67 * 2);
+	coin[2].setPosition(339 * 2, 130 * 2);
+	coin[3].setPosition(370 * 2, 130 * 2);
+	coin[4].setPosition(1250 * 2, 130 * 2);
+	coin[5].setPosition(1505 * 2, 67 * 2);
+	coin[6].setPosition(1697 * 2, 130 * 2);
+	coin[7].setPosition(1746 * 2, 130 * 2);
+	coin[8].setPosition(1793 * 2, 130 * 2);
+	coin[9].setPosition(2066 * 2, 67 * 2);
+	coin[10].setPosition(2080 * 2, 67 * 2);
+	coin[11].setPosition(2722 * 2, 130 * 2);
+
+
+	v.reset(sf::FloatRect(0, 0, 800, 450));// we are assigning our screen start at 0,0, with the same dimensions as our game screen
+
+	v.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));// position our view at 0, 0, and 1 and 1 represent that we want to view the full screen vertically and horizontally.
+
+	m.setPosition(5, 340);
 }
