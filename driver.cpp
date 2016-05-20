@@ -18,7 +18,7 @@ void goombaUpdatePosition(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5,
 void goombaDisplayScreen(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, sf::RenderWindow& w);
 void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::Text t4, sf::Text t5, sf::Text t6, sf::Text t7);
 void endGame(sf::RenderWindow& window);
-void restartGame(Player& m, sf::View& v, Enemy enemy[], Coin coin[]);
+void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[]);
 
 int main()
 {
@@ -211,10 +211,6 @@ int main()
 	//	cout << "Mario SpeedValue: " << Mario.speedValue << endl;
 
 		endPositionOfView = view.getCenter().x + screenDimensions.x / 2;
-
-		/*cout << "Mario Position X: " << Mario.getPositionX() << endl;
-		if (Mario.getPositionX() > 700)
-			restartGame(Mario, view, e, c);*/
 
 
 		if (Mario.getCoinCount() > 9) {
@@ -459,15 +455,15 @@ int main()
 					//cout << clock.getElapsedTime().asSeconds() << endl;
 				}
 				clock.restart();
-				restartGame(Mario, view, e, c);
+				restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
 			}
 			else {
 				sf::Clock clock;
 				gameOver(Mario.getPlayerLives(), clock, text, text2, text3, text4, text5, text6, text7);
 				score = 0;
 				Mario.reset();
-				endGame();
-				restartGame(Mario, view, e, c);
+				endGame(window);
+				restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
 				//Call the ending screen and if the user picks continue then call restart. Otherwise, exit the game.
 			}
 		}
@@ -641,7 +637,7 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 	gameover.setPosition(250, 225);
 	sf::RenderWindow w(sf::VideoMode(800, 600), "SFML window");
 
-	while (c.getElapsedTime().asSeconds() < 6) {
+	while (c.getElapsedTime().asSeconds() < 3) {
 		w.draw(t);
 		w.draw(t2);
 		w.draw(t3);
@@ -662,6 +658,7 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 		}
 		w.display();
 	}
+	w.close();
 }
 
 void endGame(sf::RenderWindow& window) {
@@ -674,6 +671,7 @@ void endGame(sf::RenderWindow& window) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			con.setColor(sf::Color::Red);
 			quit.setColor(sf::Color::White);
+		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 			con.setColor(sf::Color::White);
 			quit.setColor(sf::Color::Red);
@@ -687,13 +685,20 @@ void endGame(sf::RenderWindow& window) {
 	}
 }
 
-void restartGame(Player& m, sf::View& v, Enemy enemy[], Coin coin[])
+void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[])
 {
-	enemy[0].setPosition(500, 395);
-	enemy[1].setPosition(700, 395);
-	enemy[2].setPosition(800, 395);
-	enemy[3].setPosition(2550, 395);
-	enemy[4].setPosition(2950, 395);
+	e1.setPosition(400, 375);
+	e2.setPosition(639, 225);
+	e3.setPosition(839, 200);
+	e4.setPosition(2550, 395);
+	e5.setPosition(2950, 395);
+	e6.setPosition(7632, 375);
+	e7.setPosition(1098 * 2, 375);
+	e8.setPosition(1574 * 2, 375);
+	e9.setPosition(1907 * 2, 375);
+	e10.setPosition(2096 * 2, 375);
+	e11.setPosition(2579 * 2, 375);
+	e12.setPosition(2700 * 2, 375);
 
 	coin[0].setPosition(257 * 2, 130 * 2);
 	coin[1].setPosition(354 * 2, 67 * 2);
@@ -707,8 +712,7 @@ void restartGame(Player& m, sf::View& v, Enemy enemy[], Coin coin[])
 	coin[9].setPosition(2066 * 2, 67 * 2);
 	coin[10].setPosition(2080 * 2, 67 * 2);
 	coin[11].setPosition(2722 * 2, 130 * 2);
-
-
+	
 	v.reset(sf::FloatRect(0, 0, 800, 450));// we are assigning our screen start at 0,0, with the same dimensions as our game screen
 
 	v.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));// position our view at 0, 0, and 1 and 1 represent that we want to view the full screen vertically and horizontally.
