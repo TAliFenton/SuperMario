@@ -1,6 +1,7 @@
 #include "enemy.h"
 //#include "ResourcePath.hpp"
 #include <iostream>
+#include <SFML/Graphics.hpp>
 #include <cmath>
 using namespace std;
 
@@ -132,6 +133,7 @@ void Enemy::setPosition(int x, int y)
 void Enemy::setDead(sf::RenderWindow& Window) {
 	rectEnemy.left = 255 * 2;
 	pSprite.setTextureRect(rectEnemy); //set texture to die
+	
 }
 
 //If the enemy is still visible

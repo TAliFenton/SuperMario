@@ -42,6 +42,7 @@ public:
 	void setIsDead(bool dead) { isDead = dead; }
 	int getDirection()const { return direction; }
 	bool getIsDead() const { return isDead; }
+	
 	void setDead(sf::RenderWindow& Window);
 	//Precondition:
 	//Postcondition:

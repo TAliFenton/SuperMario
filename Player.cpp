@@ -25,9 +25,9 @@ Player::Player()
 	coinCount = 0;
 
 	//Dario Stuff:
-	jumpValue = 500;
-	gravityAcceleration = 8;
-	marioMass = 35;
+	jumpValue = 700;
+	gravityAcceleration = 40;
+	marioMass = 23;
 	speedValue = 0;
 
 	rect.setSize(sf::Vector2f(95 * .4, 142 * .4));
@@ -228,7 +228,9 @@ void Player::changeJump() {
 
 void Player::gravity(float deltaTime)
 {
-//	cout << "Inside Mario.jump function
+	if (speedValue < -30)
+		speedValue = 0;
+
 	speedValue -= gravityAcceleration * deltaTime;// by this is what makes mario go up in air
 	pSprite.move(0, -speedValue);// setting up the sprite value to move accordingly
 	rect.move(0, -speedValue);

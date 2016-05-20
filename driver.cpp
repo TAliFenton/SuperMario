@@ -440,8 +440,13 @@ int main()
 			}
 		}
 
+		cout << "Mario Speed Value: " << Mario.speedValue << endl;
+		cout << "Mario Position Y: " << Mario.getPositionY() << endl;
+
+		if (Mario.getPositionY() > 400)
+			Mario.setPosition(Mario.getPositionX(), 350);
+
 		Mario.update();
-		Mario.gravity(deltaTime);// start decreasing to bring mario back to ground
 		goombaUpdatePosition(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
 		checkMarioDead(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, Mario);
 		if(!Mario.getIsAlive()){
@@ -477,6 +482,8 @@ int main()
 		window.draw(text);
 		window.draw(text3);
 		window.draw(Flag1);
+		window.draw(Mario.BottomRect);
+		window.draw(Mario.getMarioRect());
 		window.display();
 		window.clear();
 	}//end of game loop
@@ -631,7 +638,7 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 	x.setPosition(366, 225);
 	livesLeft.setPosition(410, 225);
 	gameover.setPosition(250, 225);
-	sf::RenderWindow w(sf::VideoMode(800, 600), "SFML window");
+	sf::RenderWindow w(sf::VideoMode(800, 450), "SFML window");
 
 	while (c.getElapsedTime().asSeconds() < 3) {
 		w.draw(t);
@@ -689,18 +696,43 @@ void endGame(sf::RenderWindow& window) {
 
 void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[])
 {
+	
 	e1.setIsDead(false);
+	e1.speedValue = 20;
+
 	e2.setIsDead(false);
+	e2.speedValue = 20;
+
 	e3.setIsDead(false);
+	e3.speedValue = 20;
+
 	e4.setIsDead(false);
+	e4.speedValue = 20;
+
 	e5.setIsDead(false);
+	e5.speedValue = 20;
+
 	e6.setIsDead(false);
+	e6.speedValue = 20;
+
 	e7.setIsDead(false);
+	e7.speedValue = 20;
+
 	e8.setIsDead(false);
+	e8.speedValue = 20;
+
 	e9.setIsDead(false);
+	e9.speedValue = 20;
+
 	e10.setIsDead(false);
+	e10.speedValue = 20;
+
 	e11.setIsDead(false);
+	e11.speedValue = 20;
+
 	e12.setIsDead(false);
+	e12.speedValue = 20;
+
 	e1.setIsVisible(true);
 	e2.setIsVisible(true);
 	e3.setIsVisible(true);
@@ -725,6 +757,7 @@ void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy&
 	e10.setPosition(2096 * 2, 375);
 	e11.setPosition(2579 * 2, 375);
 	e12.setPosition(2700 * 2, 375);
+	goombaUpdatePosition(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
 	coin[0].setPosition(257 * 2, 130 * 2);
 	coin[1].setPosition(354 * 2, 67 * 2);
 	coin[2].setPosition(339 * 2, 130 * 2);
