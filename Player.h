@@ -35,11 +35,13 @@ public:
 	void addCoinCount();
 	void changeJump();
 	bool getIsAlive() const { return isAlive; }
+	void reset();
+	bool decreasePlayerLives();
+	int getPlayerLives() const { return playerLives; }
 	void setIsAlive(bool isAlive) { this->isAlive = isAlive; }
 	int getCoinCount() const { return coinCount; }
 	bool checkIfCoinIsTouched(Coin c);
 	void draw(sf::RenderWindow &window);
-	void checkIsAlive(bool isAlive);
 	void idle();
 
 	//Dario Stuff:

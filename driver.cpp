@@ -16,6 +16,8 @@ void checkMarioDead(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy
 void goombaSetGravity(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, double time);
 void goombaUpdatePosition(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12);
 void goombaDisplayScreen(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, sf::RenderWindow& w);
+void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::Text t4, sf::Text t5, sf::Text t6, sf::Text t7);
+void endGame(sf::RenderWindow& window);
 
 int main()
 {
@@ -160,7 +162,7 @@ int main()
 
 			else
 				continue;
-			
+
 
 		}
 
@@ -238,7 +240,7 @@ int main()
 				collides = true;// set the collision to true so mario can jump when he intersects with a tile
 				Mario.speedValue = 0;// speedValue to zero because Mario  is stanging on the block  so there is no speed Value
 			}
-			
+
 			if (e1.checkCollisionTile(tileVector[counter2], endPositionOfView))
 				e1.speedValue = 0;
 
@@ -304,7 +306,7 @@ int main()
 					whileJump = true;// set whileJump to true knowing its in the air
 				}
 			}
-		
+
 		Mario.gravity(deltaTime);// start decreasing to bring mario back to ground
 		goombaSetGravity(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, deltaTime);
 
@@ -349,12 +351,12 @@ int main()
 
 
 				//cout << "Here is the flag\n";
-				Mario.moveRight();   
+				Mario.moveRight();
 				counter25++;
 
 				if (counter25 == 10)
 					Mario.setPosition(Mario.getPositionX(), Mario.getPositionY() + 25);
-								
+
 
 				while (Mario.getPositionX() >= 3270 * 2)//once the position of mario is equal to the entrance of the castle then we will draw our terrain and everything except for Mario to simulate that he has gone inside the castle
 				{
@@ -448,7 +450,26 @@ int main()
 		Mario.gravity(deltaTime);// start decreasing to bring mario back to ground
 		goombaUpdatePosition(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
 		checkMarioDead(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, Mario);
-
+		if(!Mario.getIsAlive()){
+			if (Mario.decreasePlayerLives()) {
+				sf::Clock clock;
+				while (clock.getElapsedTime().asSeconds() < 6) {
+					gameOver(Mario.getPlayerLives(), clock, text, text2, text3, text4, text5, text6, text7);
+					//cout << clock.getElapsedTime().asSeconds() << endl;
+				}
+				clock.restart();
+				restartGame(Mario, view, e, c);
+			}
+			else {
+				sf::Clock clock;
+				gameOver(Mario.getPlayerLives(), clock, text, text2, text3, text4, text5, text6, text7);
+				score = 0;
+				Mario.reset();
+				endGame();
+				restartGame(Mario, view, e, c);
+				//Call the ending screen and if the user picks continue then call restart. Otherwise, exit the game.
+			}
+		}
 	//***************************************** End Of Mario ***********************************************
 
 
@@ -457,7 +478,7 @@ int main()
 		Mario.draw(window);
 		for (int i = 0; i < 12; i++)
 			c[i].draw(window);
-		
+
 		goombaDisplayScreen(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, window);
 		Mario.draw(window);
 		window.draw(text6);
@@ -500,7 +521,7 @@ void mainMenu(sf::RenderWindow& w, sf::Event& e, sf::Sprite& t)
 
 void checkMarioDead(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Player& m)
 {
-	
+
 	m.checkCollisionEnemy(e1);
 	m.checkCollisionEnemy(e2);
 	m.checkCollisionEnemy(e3);
@@ -589,4 +610,78 @@ void goombaDisplayScreen(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, 
 	if (e12.getIsVisible())
 		e12.draw(w);
 
+}
+
+void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::Text t4, sf::Text t5, sf::Text t6, sf::Text t7) {
+	sf::Font MarioFont;
+	if (!MarioFont.loadFromFile("images/emulogic.ttf"))
+		cout << "Cannot load font\n";
+	sf::Texture sTexture;
+	sf::Texture nTexture;
+	sf::Sprite sSprite;
+	sf::Sprite nSprite;
+	if (!sTexture.loadFromFile("images/mushroom.png"))
+		cout << "The player sprite cannot be loaded.\n";
+	if(!nTexture.loadFromFile("images/nelson.png"))
+		cout << "The Nelson sprite cannot be loaded.\n";
+	sSprite.setScale(0.1, 0.1);
+	nSprite.setScale(.7, .7);
+	sSprite.setTexture(sTexture);
+	nSprite.setTexture(nTexture);
+	sSprite.setPosition(298, 200);
+	nSprite.setPosition(520, 200);
+	sf::String lifeCount = to_string(lives);
+	sf::String end = "GAME OVER";
+	sf::Text x('x', MarioFont, 20);
+	sf::Text livesLeft(lifeCount, MarioFont, 20);
+	sf::Text gameover(end, MarioFont, 30);
+	x.setPosition(366, 225);
+	livesLeft.setPosition(410, 225);
+	gameover.setPosition(250, 225);
+	sf::RenderWindow w(sf::VideoMode(800, 600), "SFML window");
+
+	while (c.getElapsedTime().asSeconds() < 6) {
+		w.draw(t);
+		w.draw(t2);
+		w.draw(t3);
+		w.draw(t4);
+		w.draw(t5);
+		w.draw(t6);
+		w.draw(t7);
+		cout << c.getElapsedTime().asSeconds() << endl;
+
+		if (lives > 0) {
+			w.draw(sSprite);
+			w.draw(x);
+			w.draw(livesLeft);
+		}
+		else {
+			w.draw(gameover);
+			w.draw(nSprite);
+		}
+		w.display();
+	}
+}
+
+void endGame(sf::RenderWindow& window) {
+	sf::Font MarioFont;
+	if (!MarioFont.loadFromFile("images/emulogic.ttf"))
+		cout << "Cannot load font\n";
+	sf::Text con("Play", MarioFont, 20);
+	sf::Text quit("Quit", MarioFont, 20);
+	while(true){
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			con.setColor(sf::Color::Red);
+			quit.setColor(sf::Color::White);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			con.setColor(sf::Color::White);
+			quit.setColor(sf::Color::Red);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
+			if (con.getColor() == sf::Color::Red)
+				return;
+			else if(quit.getColor() == sf::Color::Red)
+				window.close();
+		}
+	}
 }

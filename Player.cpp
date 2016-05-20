@@ -155,6 +155,22 @@ void Player::draw(sf::RenderWindow &window)
 	window.draw(pSprite);
 }
 
+bool Player::decreasePlayerLives() {
+	if (playerLives > 0) {
+		playerLives--;
+		return true;
+	}
+	return false;
+}
+
+void Player::reset() {
+	direction = right;
+	isAlive = true;
+	playerLives = 3;
+	coinCount = 0;
+	idle();
+}
+
 //Dario Stuff:
 
 void Player::setPosition(int x, int y)
@@ -184,7 +200,7 @@ void Player::changeJump() {
 		rectPlayer.left = 95;
 		cout << "Direction is left in change jump functin\n";
 	}
-	
+
 	pSprite.setTextureRect(rectPlayer);
 	cout << "The sprite has been changed\n";
 }
@@ -232,12 +248,8 @@ bool Player::checkCollisionTile(Tile p)// check collision with a tile
 		pSprite.setPosition(p.mainRect.getPosition().x - 50, rect.getPosition().y);
 		return true;
 	}
-
 	//cout<<"No collision in check collision tile\n";
 	return false;
-
-
-
 }
 
 
