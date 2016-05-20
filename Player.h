@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Coin.h"
 #include"Tile.h"
+#include"enemy.h"
 
 class Player {
 private:
@@ -50,12 +51,13 @@ public:
 	void moveDown();
 	int getPositionX();
 	int getPositionY();
-	void jump(float deltaTime);
+	void gravity(float deltaTime);
 	int getTop() { return Top; }
 	int getBottom() { return Bottom; }
 	int getRight() { return Right; }
 	int getLeft() { return Left; }
 	bool checkCollisionTile(Tile p);
+	void checkCollisionEnemy(Enemy& p);
 	void update();
 
 	sf::RectangleShape TopRect;

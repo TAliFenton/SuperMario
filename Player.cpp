@@ -15,7 +15,7 @@ Player::Player()
 	pSprite.setTexture(pTexture);
 	pSprite.setTextureRect(rectPlayer);
 	//I added "playerImage.move(0, 350);" because I want to have Mario start at those specific coordinates [0, 350] instead of having it at the default which is (0, 0) [the upper left corner of the window]
-	rect.setPosition(5, 340);
+	rect.setPosition(5, 345);
 	pSprite.setPosition(rect.getPosition().x, rect.getPosition().y + 10 );
 	//rect.setSize(sf::Vector2f(95,142 / 2));
 	pSprite.setScale(.4, .4);
@@ -25,9 +25,9 @@ Player::Player()
 	coinCount = 0;
 
 	//Dario Stuff:
-	jumpValue = 550;
-	gravityAcceleration = 15;
-	marioMass = 50;
+	jumpValue = 500;
+	gravityAcceleration = 8;
+	marioMass = 35;
 	speedValue = 0;
 
 	rect.setSize(sf::Vector2f(95 * .4, 142 * .4));
@@ -189,9 +189,9 @@ void Player::changeJump() {
 	cout << "The sprite has been changed\n";
 }
 
-void Player::jump(float deltaTime)
+void Player::gravity(float deltaTime)
 {
-	cout << "Inside Mario.jump function\n";
+//	cout << "Inside Mario.jump function
 	speedValue -= gravityAcceleration * deltaTime;// by this is what makes mario go up in air
 	pSprite.move(0, -speedValue);// setting up the sprite value to move accordingly
 	rect.move(0, -speedValue);
@@ -201,11 +201,14 @@ bool Player::checkCollisionTile(Tile p)// check collision with a tile
 {
 
 
-	if (BottomRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
+	if (BottomRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
 	{
-		rect.setPosition(rect.getPosition().x, p.mainRect.getPosition().y - 55);
-		pSprite.setPosition(rect.getPosition().x, p.mainRect.getPosition().y - 50);
-		return true;
+		if (rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
+		{
+			rect.setPosition(rect.getPosition().x, p.mainRect.getPosition().y - 55);
+			pSprite.setPosition(rect.getPosition().x, p.mainRect.getPosition().y - 55);
+			return true;
+		}
 	}
 	//cout << "Before Top check if statement\n";
 	if (TopRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
@@ -234,5 +237,31 @@ bool Player::checkCollisionTile(Tile p)// check collision with a tile
 	return false;
 
 
+
+}
+
+
+void Player::checkCollisionEnemy(Enemy& p)// check collision with a tile
+{
+	if (BottomRect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()) && rect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()))
+	{
+		p.setIsDead(true);
+		return;
+	}
+	//cout << "Before Top check if statement\n";
+
+	if (LeftRect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()) && rect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()))
+	{
+		//cout << "Goomba Touched Mario from Right\n";
+		isAlive = false;
+		return;
+	}
+	//cout << "Before Right check if statement\n";
+	if (RightRect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()) && rect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()))
+	{
+		//cout << "Gomba touched Mario from Left\n";
+		isAlive = false;
+		return;
+	}
 
 }

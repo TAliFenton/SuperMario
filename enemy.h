@@ -2,19 +2,39 @@
 #define ENEMY_H
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
+#include"Tile.h"
 class Enemy {
 private:
 	sf::Clock clock;
 	sf::Texture pTexture;
 	sf::IntRect rectEnemy;
 	sf::IntRect move;//This rectangle will stay behind the sprite creating a new rectangle
+
+	sf::RectangleShape rect;
+
 	sf::Sprite pSprite;
 	bool isVisible;
 	enum lastDirectionFacing { left, right };
 	int direction;
 	bool isDead;
+	int counter;
 public:
 	//***********************************************************
+
+
+	sf::RectangleShape TopRect;
+	sf::RectangleShape BottomRect;
+	sf::RectangleShape RightRect;
+	sf::RectangleShape LeftRect;
+
+	sf::RectangleShape getMainRect() const { return rect; }
+
+
+	float gravityAcceleration;// the acceleration to gravity which brings the player back down
+	double speedValue; //this is the rate at which we are bringing loompas back down to the ground
+	bool checkCollisionTile(Tile p, int position);
+	void update();
+
 	Enemy();
 	//Precondition: Has to be set with defualt numbers or statements
 	//Postcondition: Should run the default values given when runs
@@ -70,6 +90,8 @@ public:
 	//Postcondition:
 	//***********************************************************
 	void setPosition(int x, int y);
+
+	void gravity(float deltaTime);
 };
 
 #endif /* enemy_hpp */
