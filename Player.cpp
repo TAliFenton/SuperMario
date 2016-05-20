@@ -164,10 +164,31 @@ bool Player::decreasePlayerLives() {
 }
 
 void Player::reset() {
+	if (!pTexture.loadFromFile("images/MarioNew.png"))
+		cout << "The player sprite cannot be loaded.\n";
+	//IntRect objects hold 4 parameters: (Left/x-coordinate, Top/y-coordinate, Width, Height)
+	rectPlayer.left = 0;
+	rectPlayer.top = 0;
+	rectPlayer.width = 93;
+	rectPlayer.height = 140;
+	pSprite.setTexture(pTexture);
+	pSprite.setTextureRect(rectPlayer);
+	//I added "playerImage.move(0, 350);" because I want to have Mario start at those specific coordinates [0, 350] instead of having it at the default which is (0, 0) [the upper left corner of the window]
+	rect.setPosition(5, 345);
+	pSprite.setPosition(rect.getPosition().x, rect.getPosition().y + 10);
+	//rect.setSize(sf::Vector2f(95,142 / 2));
+	pSprite.setScale(.4, .4);
 	direction = right;
 	isAlive = true;
 	playerLives = 3;
 	coinCount = 0;
+
+	//Dario Stuff:
+	jumpValue = 500;
+	gravityAcceleration = 8;
+	marioMass = 35;
+	speedValue = 0;
+
 	idle();
 }
 
@@ -260,18 +281,13 @@ void Player::checkCollisionEnemy(Enemy& p)// check collision with a tile
 		p.setIsDead(true);
 		return;
 	}
-	//cout << "Before Top check if statement\n";
-
 	if (LeftRect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()) && rect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()))
 	{
-		//cout << "Goomba Touched Mario from Right\n";
 		isAlive = false;
 		return;
 	}
-	//cout << "Before Right check if statement\n";
 	if (RightRect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()) && rect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()))
 	{
-		//cout << "Gomba touched Mario from Left\n";
 		isAlive = false;
 		return;
 	}

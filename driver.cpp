@@ -200,7 +200,7 @@ int main()
 	text3.setCharacterSize(20);
 	text2.setFont(MarioFont);
 	text3.setFont(MarioFont);
-	text2.setPosition(61, 29);
+	text2.setPosition(0, 29);
 	text3.setPosition(200, 29);
 	text3.setColor(sf::Color::Yellow);
 
@@ -430,9 +430,6 @@ int main()
 		else {
 			Mario.idle();
 		}
-
-
-
 		for (int i = 0; i < 12; i++) {
 			if (Mario.checkIfCoinIsTouched(c[i]) && c[i].getIsVisible()) {
 				Mario.addCoinCount();
@@ -450,20 +447,14 @@ int main()
 		if(!Mario.getIsAlive()){
 			if (Mario.decreasePlayerLives()) {
 				sf::Clock clock;
-				while (clock.getElapsedTime().asSeconds() < 6) {
-					gameOver(Mario.getPlayerLives(), clock, text, text2, text3, text4, text5, text6, text7);
-					//cout << clock.getElapsedTime().asSeconds() << endl;
-				}
+				gameOver(Mario.getPlayerLives(), clock, text, text2, text3, text4, text5, text6, text7);
 				clock.restart();
 				restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
 			}
 			else {
 				sf::Clock clock;
 				gameOver(Mario.getPlayerLives(), clock, text, text2, text3, text4, text5, text6, text7);
-				score = 0;
-				Mario.reset();
-				endGame(window);
-				restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
+				window.close();
 				//Call the ending screen and if the user picks continue then call restart. Otherwise, exit the game.
 			}
 		}
@@ -485,8 +476,6 @@ int main()
 		window.draw(text2);
 		window.draw(text);
 		window.draw(text3);
-
-
 		window.draw(Flag1);
 		window.display();
 		window.clear();
@@ -617,6 +606,13 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 	sf::Texture nTexture;
 	sf::Sprite sSprite;
 	sf::Sprite nSprite;
+	t.setPosition(0, 0);
+	t2.setPosition(0, 29);
+	t3.setPosition(200, 29);
+	t4.setPosition(360, 0);
+	t5.setPosition(360, 29);
+	t6.setPosition(560, 0);
+	t7.setPosition(560, 29);
 	if (!sTexture.loadFromFile("images/mushroom.png"))
 		cout << "The player sprite cannot be loaded.\n";
 	if(!nTexture.loadFromFile("images/nelson.png"))
@@ -662,11 +658,14 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 }
 
 void endGame(sf::RenderWindow& window) {
+	window.clear();
 	sf::Font MarioFont;
 	if (!MarioFont.loadFromFile("images/emulogic.ttf"))
 		cout << "Cannot load font\n";
-	sf::Text con("Play", MarioFont, 20);
-	sf::Text quit("Quit", MarioFont, 20);
+	sf::Text con("Play", MarioFont, 40);
+	sf::Text quit("Quit", MarioFont, 40);
+	con.setPosition(450, 200);
+	quit.setPosition(450, 500);
 	while(true){
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			con.setColor(sf::Color::Red);
@@ -678,15 +677,42 @@ void endGame(sf::RenderWindow& window) {
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
 			if (con.getColor() == sf::Color::Red)
-				return;
-			else if(quit.getColor() == sf::Color::Red)
+				false;
+				//or we can do:
+				//return;
+			else
 				window.close();
 		}
 	}
+	window.display();
 }
 
 void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[])
 {
+	e1.setIsDead(false);
+	e2.setIsDead(false);
+	e3.setIsDead(false);
+	e4.setIsDead(false);
+	e5.setIsDead(false);
+	e6.setIsDead(false);
+	e7.setIsDead(false);
+	e8.setIsDead(false);
+	e9.setIsDead(false);
+	e10.setIsDead(false);
+	e11.setIsDead(false);
+	e12.setIsDead(false);
+	e1.setIsVisible(true);
+	e2.setIsVisible(true);
+	e3.setIsVisible(true);
+	e4.setIsVisible(true);
+	e5.setIsVisible(true);
+	e6.setIsVisible(true);
+	e7.setIsVisible(true);
+	e8.setIsVisible(true);
+	e9.setIsVisible(true);
+	e10.setIsVisible(true);
+	e11.setIsVisible(true);
+	e12.setIsVisible(true);
 	e1.setPosition(400, 375);
 	e2.setPosition(639, 225);
 	e3.setPosition(839, 200);
@@ -699,7 +725,6 @@ void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy&
 	e10.setPosition(2096 * 2, 375);
 	e11.setPosition(2579 * 2, 375);
 	e12.setPosition(2700 * 2, 375);
-
 	coin[0].setPosition(257 * 2, 130 * 2);
 	coin[1].setPosition(354 * 2, 67 * 2);
 	coin[2].setPosition(339 * 2, 130 * 2);
@@ -716,6 +741,6 @@ void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy&
 	v.reset(sf::FloatRect(0, 0, 800, 450));// we are assigning our screen start at 0,0, with the same dimensions as our game screen
 
 	v.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));// position our view at 0, 0, and 1 and 1 represent that we want to view the full screen vertically and horizontally.
-
+	m.setIsAlive(true);
 	m.setPosition(5, 340);
 }

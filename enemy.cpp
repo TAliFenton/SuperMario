@@ -114,7 +114,7 @@ void Enemy::moveRight() {
 	}
 	else {
 		pSprite.move(-300, 400);
-		rect.move(300, 400);
+		rect.move(-300, 400);
 	}
 }
 
@@ -221,10 +221,6 @@ bool Enemy::checkCollisionTile(Tile p, int position)// check collision with a ti
 	//	cout << "Counter: " << counter << endl;
 
 	}
-
-
-
-
 	if (BottomRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
 	{
 		rect.setPosition(rect.getPosition().x, p.mainRect.getPosition().y - 25);
