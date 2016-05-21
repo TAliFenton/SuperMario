@@ -17,7 +17,7 @@ void goombaSetGravity(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Ene
 void goombaUpdatePosition(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12);
 void goombaDisplayScreen(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, sf::RenderWindow& w);
 void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::Text t4, sf::Text t5, sf::Text t6, sf::Text t7);
-void endGame(sf::RenderWindow& window);
+bool endGame();
 void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[]);
 
 int main()
@@ -364,9 +364,14 @@ int main()
 				Mario.draw(window);//rect
 				window.display();
 				window.clear();
-
 			}
-
+			if (endGame()) {
+				Mario.reset();
+				score = 0;
+				restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
+			}
+			else
+				window.close();
 		}
 
 
@@ -437,7 +442,13 @@ int main()
 			else {
 				sf::Clock clock;
 				gameOver(Mario.getPlayerLives(), clock, text, text2, text3, text4, text5, text6, text7);
-				window.close();
+				if (endGame()) {
+					Mario.reset();
+					score = 0;
+					restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
+				}
+				else
+					window.close();
 				//Call the ending screen and if the user picks continue then call restart. Otherwise, exit the game.
 			}
 		}
@@ -585,6 +596,7 @@ void goombaDisplayScreen(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, 
 }
 
 void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::Text t4, sf::Text t5, sf::Text t6, sf::Text t7) {
+	sf::RenderWindow w(sf::VideoMode(800, 450), "Super Mario Bros.");
 	sf::Font MarioFont;
 	if (!MarioFont.loadFromFile("images/emulogic.ttf"))
 		cout << "Cannot load font\n";
@@ -617,8 +629,7 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 	x.setPosition(366, 225);
 	livesLeft.setPosition(410, 225);
 	gameover.setPosition(250, 225);
-	sf::RenderWindow w(sf::VideoMode(800, 450), "Super Mario Bros.");
-
+	w.clear();
 	while (c.getElapsedTime().asSeconds() < 3) {
 		w.draw(t);
 		w.draw(t2);
@@ -627,8 +638,6 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 		w.draw(t5);
 		w.draw(t6);
 		w.draw(t7);
-		cout << c.getElapsedTime().asSeconds() << endl;
-
 		if (lives > 0) {
 			w.draw(sSprite);
 			w.draw(x);
@@ -643,15 +652,15 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 	w.close();
 }
 
-void endGame(sf::RenderWindow& window) {
-	window.clear();
+bool endGame() {
+	sf::RenderWindow window(sf::VideoMode(800, 450), "Super Mario Bros.");
 	sf::Font MarioFont;
 	if (!MarioFont.loadFromFile("images/emulogic.ttf"))
 		cout << "Cannot load font\n";
 	sf::Text con("Play", MarioFont, 40);
 	sf::Text quit("Quit", MarioFont, 40);
-	con.setPosition(450, 200);
-	quit.setPosition(450, 500);
+	con.setPosition(300, 150);
+	quit.setPosition(300, 250);
 	while(true){
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			con.setColor(sf::Color::Red);
@@ -663,19 +672,23 @@ void endGame(sf::RenderWindow& window) {
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
 			if (con.getColor() == sf::Color::Red)
-				false;
-				//or we can do:
-				//return;
+				return true;
+			//or we can do:
+			//return;
 			else
-				window.close();
+				return false;
 		}
+		window.clear();
+		window.draw(con);
+		window.draw(quit);
+		window.display();
 	}
-	window.display();
+	window.close();
 }
 
 void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[])
 {
-	
+
 	e1.setIsDead(false);
 	e1.speedValue = 20;
 
@@ -749,7 +762,7 @@ void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy&
 	coin[9].setPosition(2066 * 2, 67 * 2);
 	coin[10].setPosition(2080 * 2, 67 * 2);
 	coin[11].setPosition(2722 * 2, 130 * 2);
-	
+
 	v.reset(sf::FloatRect(0, 0, 800, 450));// we are assigning our screen start at 0,0, with the same dimensions as our game screen
 
 	v.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));// position our view at 0, 0, and 1 and 1 represent that we want to view the full screen vertically and horizontally.
