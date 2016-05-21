@@ -58,7 +58,7 @@ public:
 	int getBottom() { return Bottom; }
 	int getRight() { return Right; }
 	int getLeft() { return Left; }
-	bool checkCollisionTile(Tile p);
+	bool checkCollisionTile(Tile& p);
 	void checkCollisionEnemy(Enemy& p);
 	void update();
 

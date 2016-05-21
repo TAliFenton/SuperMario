@@ -43,7 +43,7 @@ int main()
 	sf::Sound deadMario;
 	sf::Music music;
 	sf::Vector2f screenDimensions(800, 450);// vector to store our screen dimensions
-	sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "View Port");
+	sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Super Mario Bros.");
 	sf::Texture texture;// texture in order
 	sf::Texture title;
 	sf::Texture flag;
@@ -61,18 +61,18 @@ int main()
 	int i = 0;//keeps track of how many steps the goomba has taken
 	int counterDead = 12; //used to keep trak of how many dead so for loop do not run more than they need to
 	Enemy e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12;// create an array for all of the enemy e1;
-	e1.setPosition(400 , 375);
-	e2.setPosition(639 , 225);
-	e3.setPosition(839 , 200);
-	e4.setPosition(2550 , 395);
-	e5.setPosition(2950 , 395);
-	e6.setPosition(7632, 375);
-	e7.setPosition(1098 * 2, 375);
-	e8.setPosition(1574 * 2, 375);
-	e9.setPosition(1907 * 2, 375);
-	e10.setPosition(2096 * 2, 375);
-	e11.setPosition(2579 * 2, 375);
-	e12.setPosition(2700 * 2, 375);
+	e1.setPosition(353* 2, 170 * 2 );
+	e2.setPosition(676 * 2 , 170 * 2);
+	e3.setPosition(817 * 2 , 170 * 2);
+	e4.setPosition(1047 * 2 , 170 * 2);
+	e5.setPosition(1313 * 2 , 170 * 2);
+	e6.setPosition(1325 * 2, 170 * 2);
+	e7.setPosition(1556 * 2, 170 * 2);
+	e8.setPosition(1590 * 2, 170 * 2);
+	e9.setPosition(1987 * 2, 170 * 2);
+	e10.setPosition(2053 * 2, 170 * 2);
+	e11.setPosition(2065 * 2, 170 * 2);
+	e12.setPosition(2788 * 2, 170 * 2);
 
 	sf::Clock delta;
 	double deltaTime;
@@ -164,7 +164,6 @@ int main()
 			else
 				continue;
 
-
 		}
 
 	}
@@ -207,8 +206,10 @@ int main()
 	music.play();// start game music as soon as game starts
 	while (window.isOpen())// game loop
 	{
+		//cout << "Mario SpeedValue: " << Mario.speedValue << endl;
+		//cout << "e1 Position: " << e1.getPositionX() << ", " << e1.getPositionY() << "e1 SpeedValue: " << e1.speedValue << endl;
+
 		window.setFramerateLimit(200);
-	//	cout << "Mario SpeedValue: " << Mario.speedValue << endl;
 
 		endPositionOfView = view.getCenter().x + screenDimensions.x / 2;
 
@@ -227,14 +228,13 @@ int main()
 
 
 		counter2 = 0;
-		collides = false;// we have this boolean to see if Mario is colliding with a tile
+		//collides = false;// we have this boolean to see if Mario is colliding with a tile
+		collides = false;
 		for (tileIterator = tileVector.begin(); tileIterator != tileVector.end(); tileIterator++)//go through all the tiles in our vector and check if there is collision
 		{
-
-
 			if (Mario.checkCollisionTile(tileVector[counter2]))// check to see if Mario is colliding with a tiles(block) if its true then
 			{
-				collides = true;// set the collision to true so mario can jump when he intersects with a tile
+				collides = true;
 				Mario.speedValue = 0;// speedValue to zero because Mario  is stanging on the block  so there is no speed Value
 			}
 
@@ -274,21 +274,9 @@ int main()
 			if (e12.checkCollisionTile(tileVector[counter2], endPositionOfView))
 				e12.speedValue = 0;
 
-			/*if (!Mario.checkCollisionTile(tileVector[counter2]))
-			{
-				whileJump = true;
-			}*/
-
-
 			counter2++;// increment index so it goes through each of the tiles set up in the game
 
 		}
-		//cout << "Mario Speed Value: " << Mario.speedValue << endl;
-
-		/*if (Mario.speedValue  <= 50)// when Mario jumps, and reaches this value in speed value, set while jump to true;
-			whileJump = true;*/
-
-		//cout << "While Jump: " << whileJump << endl;
 
 		deltaTime = delta.restart().asSeconds();
 
@@ -326,7 +314,6 @@ int main()
 			while (Flag1.getPosition().y < 182 * 2)// if the position of the flag is less than the position of the floor
 			{
 
-				cout << "Inside while loop that brings the flag down\n";
 				Flag1.move(0, 2);// move the flag down two pixels at a time
 
 				if (Mario.getPositionY() + 90 < 212  * 2)// if the position of Mario is less than the position of the floor
@@ -344,10 +331,7 @@ int main()
 			stageClear.play();// play the when he clears the stage
 			while (Mario.getPositionX() == 3173 * 2 || Mario.getPositionX() <= 3275 * 2)// this loop will run as long as mario has reaches the flag, and the position of mario is less than the position of the entrance of the castle
 			{
-				cout << "Inside loop where mario moves by itselfs\n";
 
-
-				//cout << "Here is the flag\n";
 				Mario.moveRight();
 				counter25++;
 
@@ -367,7 +351,6 @@ int main()
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
 						return 0;
 
-					cout << "Inside loop where Mario disapperas into castle\n";
 					window.draw(sprite);// display the background
 					window.setView(view);// display the view
 					window.display();
@@ -434,19 +417,14 @@ int main()
 			if (Mario.checkIfCoinIsTouched(c[i]) && c[i].getIsVisible()) {
 				Mario.addCoinCount();
 				coinSound.play();
-				cout << "Number of Coins: " << Mario.getCoinCount() << endl;
 				score += 200;
 				c[i].setIsVisible(false);
 			}
 		}
 
-		cout << "Mario Speed Value: " << Mario.speedValue << endl;
-		cout << "Mario Position Y: " << Mario.getPositionY() << endl;
-
-		if (Mario.getPositionY() > 400)
-			Mario.setPosition(Mario.getPositionX(), 350);
 
 		Mario.update();
+		Mario.gravity(deltaTime);
 		goombaUpdatePosition(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
 		checkMarioDead(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, Mario);
 		if(!Mario.getIsAlive()){
@@ -482,8 +460,9 @@ int main()
 		window.draw(text);
 		window.draw(text3);
 		window.draw(Flag1);
-		window.draw(Mario.BottomRect);
-		window.draw(Mario.getMarioRect());
+		//window.draw(e1.LeftRect);
+		//window.draw(Mario.getMarioRect());
+		//window.draw(e1.RightRect);
 		window.display();
 		window.clear();
 	}//end of game loop
@@ -638,7 +617,7 @@ void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::
 	x.setPosition(366, 225);
 	livesLeft.setPosition(410, 225);
 	gameover.setPosition(250, 225);
-	sf::RenderWindow w(sf::VideoMode(800, 450), "SFML window");
+	sf::RenderWindow w(sf::VideoMode(800, 450), "Super Mario Bros.");
 
 	while (c.getElapsedTime().asSeconds() < 3) {
 		w.draw(t);
@@ -745,18 +724,18 @@ void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy&
 	e10.setIsVisible(true);
 	e11.setIsVisible(true);
 	e12.setIsVisible(true);
-	e1.setPosition(400, 375);
-	e2.setPosition(639, 225);
-	e3.setPosition(839, 200);
-	e4.setPosition(2550, 395);
-	e5.setPosition(2950, 395);
-	e6.setPosition(7632, 375);
-	e7.setPosition(1098 * 2, 375);
-	e8.setPosition(1574 * 2, 375);
-	e9.setPosition(1907 * 2, 375);
-	e10.setPosition(2096 * 2, 375);
-	e11.setPosition(2579 * 2, 375);
-	e12.setPosition(2700 * 2, 375);
+	e1.setPosition(353 * 2, 170 * 2);
+	e2.setPosition(676 * 2, 170 * 2);
+	e3.setPosition(817 * 2, 170 * 2);
+	e4.setPosition(1047 * 2, 170 * 2);
+	e5.setPosition(1313 * 2, 170 * 2);
+	e6.setPosition(1325 * 2, 170 * 2);
+	e7.setPosition(1556 * 2, 170 * 2);
+	e8.setPosition(1590 * 2, 170 * 2);
+	e9.setPosition(1987 * 2, 170 * 2);
+	e10.setPosition(2053 * 2, 170 * 2);
+	e11.setPosition(2065 * 2, 170 * 2);
+	e12.setPosition(2788 * 2, 170 * 2);
 	goombaUpdatePosition(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
 	coin[0].setPosition(257 * 2, 130 * 2);
 	coin[1].setPosition(354 * 2, 67 * 2);
@@ -775,5 +754,6 @@ void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy&
 
 	v.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));// position our view at 0, 0, and 1 and 1 represent that we want to view the full screen vertically and horizontally.
 	m.setIsAlive(true);
-	m.setPosition(5, 340);
+	m.setPosition(5, 300);
+	m.speedValue = 0;
 }

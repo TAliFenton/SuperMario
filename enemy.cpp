@@ -20,12 +20,14 @@ Enemy::Enemy(){
 	pSprite.setTexture(pTexture);
 	pSprite.setTextureRect(rectEnemy);
 	counter = 0;
-
+	
 	rect.setSize(sf::Vector2f(250 * .1, 248 * .1));
 	TopRect.setSize(sf::Vector2f(3 * 2, 6 * 2));
-	LeftRect.setSize(sf::Vector2f(6 * 2, 3 * 2));
-	RightRect.setSize(sf::Vector2f(6 * 2, 3 * 2));
+	LeftRect.setSize(sf::Vector2f(3 * 2, 3 * 2));
+	RightRect.setSize(sf::Vector2f(3 * 2, 3 * 2));
 	BottomRect.setSize(sf::Vector2f(3 * 2, 6 * 2));
+
+	rect.setPosition(353 * 2, 195 * 2);
 
 	pSprite.setScale(.1, .1);
 
@@ -168,10 +170,13 @@ void Enemy::draw(sf::RenderWindow &window) {
 
 void Enemy::gravity(float deltaTime)
 {
-	if (speedValue > 0)
+	if (speedValue > 0 || speedValue < -1)
 		speedValue = 0;
 
-	//cout << "Inside Gooompa set gravity function\n";
+	/*if (rect.getPosition().y > 500)
+		rect.setPosition(rect.getPosition().x, 195 * 2);*/
+
+
 	speedValue -= gravityAcceleration * deltaTime;// by this is what makes mario go up in air
 	pSprite.move(0, -speedValue);// setting up the sprite value to move accordingly
 	rect.move(0, -speedValue);
@@ -191,12 +196,12 @@ bool Enemy::checkCollisionTile(Tile p, int position)// check collision with a ti
 
 		}
 
-		if (LeftRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
+		if (LeftRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds())) //&& rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
 		{
 			counter = 2;
 		}
 
-		if (RightRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
+		if (RightRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds())) //&& rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
 		{
 			counter = 3;
 		}
@@ -220,7 +225,6 @@ bool Enemy::checkCollisionTile(Tile p, int position)// check collision with a ti
 
 		}
 
-	//	cout << "Counter: " << counter << endl;
 
 	}
 	if (BottomRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
@@ -241,16 +245,16 @@ bool Enemy::checkCollisionTile(Tile p, int position)// check collision with a ti
 	if (LeftRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
 	{
 		//cout << "Mario collides with left block\n";
-		rect.setPosition(p.mainRect.getPosition().x + p.mainRect.getSize().x + 5, rect.getPosition().y);
-		pSprite.setPosition(p.mainRect.getPosition().x + p.mainRect.getSize().x + 5, rect.getPosition().y);
+		rect.setPosition(p.mainRect.getPosition().x + p.mainRect.getSize().x + 10, rect.getPosition().y);
+		pSprite.setPosition(p.mainRect.getPosition().x + p.mainRect.getSize().x + 10, rect.getPosition().y);
 	//	moveRight();
 		return true;
 	}
 	//cout << "Before Right check if statement\n";
 	if (RightRect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()) && rect.getGlobalBounds().intersects(p.mainRect.getGlobalBounds()))
 	{
-		rect.setPosition(p.mainRect.getPosition().x - 50, rect.getPosition().y);
-		pSprite.setPosition(p.mainRect.getPosition().x - 50, rect.getPosition().y);
+		rect.setPosition(p.mainRect.getPosition().x - 25, rect.getPosition().y);
+		pSprite.setPosition(p.mainRect.getPosition().x - 25, rect.getPosition().y);
 	//	moveLeft();
 		return true;
 	}
