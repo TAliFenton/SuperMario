@@ -280,11 +280,12 @@ bool Player::checkCollisionTile(Tile& p)// check collision with a tile
 }
 
 
-void Player::checkCollisionEnemy(Enemy& p)// check collision with a tile
+void Player::checkCollisionEnemy(Enemy& p, int& score)// check collision with a tile
 {
 	if (BottomRect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()) && rect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()))
 	{
 		p.setIsDead(true);
+		score += 100;
 		return;
 	}
 	if (LeftRect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()) && rect.getGlobalBounds().intersects(p.getMainRect().getGlobalBounds()))

@@ -12,13 +12,13 @@
 using namespace std;
 
 void mainMenu(sf::RenderWindow& w, sf::Event& e, sf::Sprite& t);
-void checkMarioDead(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Player& m);
+void checkMarioDead(int& score, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Player& m);
 void goombaSetGravity(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, double time);
 void goombaUpdatePosition(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12);
 void goombaDisplayScreen(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, sf::RenderWindow& w);
 void gameOver(int lives, sf::Clock c, sf::Text t, sf::Text t2, sf::Text t3, sf::Text t4, sf::Text t5, sf::Text t6, sf::Text t7);
 bool endGame();
-void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[]);
+void restartGame(sf::Text &t, sf::Text &t2, sf::Text &t3, sf::Text &t4, sf::Text &t5, sf::Text &t6, sf::Text &t7, Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[]);
 
 int main()
 {
@@ -153,31 +153,22 @@ int main()
 		for (int j = 0; j < tempGridSize.y; j++)
 		{
 			tempGridSpriteOutline.setPosition(i * tempGridSpriteOutline.getSize().x, j *  tempGridSpriteOutline.getSize().y);
-
 			input >> counter;
 			if (counter == 1)
 			{
 				tiles.setMainRectPosition(i * 32, j * 32);//we are multiplying by 32 because the size of the square is 16 by 16, but since we are scaling it by two we multiply 16 * 2
 				tileVector.push_back(tiles);// for every tile that has been placed in our
 			}
-
 			else
 				continue;
-
 		}
-
 	}
-
 	//*********************************************************
-
 	mainMenu(window, event, title1);// this is for our intro screen
-
 	int score = 0;
 	sf::Font MarioFont;
-	if (!MarioFont.loadFromFile("images/emulogic.ttf"));
-	{
+	if (!MarioFont.loadFromFile("images/emulogic.ttf"))
 		cout << "Cannot load font\n";
-	}
 	sf::String sentence1 = "World";
 	sf::String sentence2 = "Grit";
 	sf::String sentence = "Dario";
@@ -225,8 +216,6 @@ int main()
 		text3.setString(cCount);
 		window.draw(sprite);
 
-
-
 		counter2 = 0;
 		//collides = false;// we have this boolean to see if Mario is colliding with a tile
 		collides = false;
@@ -237,13 +226,12 @@ int main()
 				collides = true;
 				Mario.speedValue = 0;// speedValue to zero because Mario  is stanging on the block  so there is no speed Value
 			}
-
-			if (e1.checkCollisionTile(tileVector[counter2], endPositionOfView))
+			if (e1.checkCollisionTile(tileVector[counter2], endPositionOfView)){
 				e1.speedValue = 0;
-
-			if (e2.checkCollisionTile(tileVector[counter2], endPositionOfView))
+			}
+			if (e2.checkCollisionTile(tileVector[counter2], endPositionOfView)){
 				e2.speedValue = 0;
-
+			}
 			if (e3.checkCollisionTile(tileVector[counter2], endPositionOfView))
 				e3.speedValue = 0;
 
@@ -281,16 +269,16 @@ int main()
 		deltaTime = delta.restart().asSeconds();
 
 
-		if (Mario.speedValue <= 0 && Mario.speedValue > -2  && collides)// we check speed value to be within this range since speed value depends on the delta time, so when it hits the ground no matter how high Mario goes the speedvalue will always be between that range
+		if (Mario.speedValue <= 0 && Mario.speedValue > -2 && collides)// we check speed value to be within this range since speed value depends on the delta time, so when it hits the ground no matter how high Mario goes the speedvalue will always be between that range
 																			  //in if statement above, we need to check that collide is true as well so mario is colliding with a block and that he can jump
 		{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))//if mario is on the ground
-				{
-					jumpSound.play();
-					Mario.speedValue = Mario.getJumpValue() / Mario.getMarioMass();//mario is going to go up this amount of pixels
-					whileJump = true;// set whileJump to true knowing its in the air
-				}
+			{
+				jumpSound.play();
+				Mario.speedValue = Mario.getJumpValue() / Mario.getMarioMass();//mario is going to go up this amount of pixels
+				whileJump = true;// set whileJump to true knowing its in the air
 			}
+		}
 
 		Mario.gravity(deltaTime);// start decreasing to bring mario back to ground
 		goombaSetGravity(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, deltaTime);
@@ -316,7 +304,7 @@ int main()
 
 				Flag1.move(0, 2);// move the flag down two pixels at a time
 
-				if (Mario.getPositionY() + 90 < 212  * 2)// if the position of Mario is less than the position of the floor
+				if (Mario.getPositionY() + 90 < 212 * 2)// if the position of Mario is less than the position of the floor
 					Mario.moveDown();// bring mario down
 
 
@@ -326,12 +314,10 @@ int main()
 				window.draw(Flag1);
 				window.display();
 				window.clear();
-
 			}
 			stageClear.play();// play the when he clears the stage
 			while (Mario.getPositionX() == 3173 * 2 || Mario.getPositionX() <= 3275 * 2)// this loop will run as long as mario has reaches the flag, and the position of mario is less than the position of the entrance of the castle
 			{
-
 				Mario.moveRight();
 				counter25++;
 
@@ -345,7 +331,6 @@ int main()
 					{
 						if (event.type == sf::Event::Closed)// if you would like to close the window
 							window.close();
-
 					}
 
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
@@ -355,8 +340,6 @@ int main()
 					window.setView(view);// display the view
 					window.display();
 					window.clear();
-
-
 				}
 
 				window.setView(view);// display the view
@@ -368,10 +351,13 @@ int main()
 			if (endGame()) {
 				Mario.reset();
 				score = 0;
-				restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
+				restartGame(text, text2, text3, text4, text5, text6, text7, Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
+				break;
 			}
-			else
+			else {
 				window.close();
+				break;
+			}
 		}
 
 
@@ -426,18 +412,16 @@ int main()
 				c[i].setIsVisible(false);
 			}
 		}
-
-
 		Mario.update();
 		Mario.gravity(deltaTime);
 		goombaUpdatePosition(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
-		checkMarioDead(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, Mario);
-		if(!Mario.getIsAlive()){
+		checkMarioDead(score, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, Mario);
+		if (!Mario.getIsAlive() || Mario.getPositionY() > 500) {
 			if (Mario.decreasePlayerLives()) {
 				sf::Clock clock;
 				gameOver(Mario.getPlayerLives(), clock, text, text2, text3, text4, text5, text6, text7);
 				clock.restart();
-				restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
+				restartGame(text, text2, text3, text4, text5, text6, text7, Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
 			}
 			else {
 				sf::Clock clock;
@@ -445,17 +429,14 @@ int main()
 				if (endGame()) {
 					Mario.reset();
 					score = 0;
-					restartGame(Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
+					restartGame(text, text2, text3, text4, text5, text6, text7, Mario, view, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, c);
 				}
 				else
 					window.close();
 				//Call the ending screen and if the user picks continue then call restart. Otherwise, exit the game.
 			}
 		}
-	//***************************************** End Of Mario ***********************************************
-
-
-
+		//***************************************** End Of Mario ***********************************************
 		window.setView(view);
 		Mario.draw(window);
 		for (int i = 0; i < 12; i++)
@@ -502,21 +483,21 @@ void mainMenu(sf::RenderWindow& w, sf::Event& e, sf::Sprite& t)
 
 }
 
-void checkMarioDead(Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Player& m)
+void checkMarioDead(int& score, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Player& m)
 {
 
-	m.checkCollisionEnemy(e1);
-	m.checkCollisionEnemy(e2);
-	m.checkCollisionEnemy(e3);
-	m.checkCollisionEnemy(e4);
-	m.checkCollisionEnemy(e5);
-	m.checkCollisionEnemy(e6);
-	m.checkCollisionEnemy(e7);
-	m.checkCollisionEnemy(e8);
-	m.checkCollisionEnemy(e9);
-	m.checkCollisionEnemy(e10);
-	m.checkCollisionEnemy(e11);
-	m.checkCollisionEnemy(e12);
+	m.checkCollisionEnemy(e1, score);
+	m.checkCollisionEnemy(e2, score);
+	m.checkCollisionEnemy(e3, score);
+	m.checkCollisionEnemy(e4, score);
+	m.checkCollisionEnemy(e5, score);
+	m.checkCollisionEnemy(e6, score);
+	m.checkCollisionEnemy(e7, score);
+	m.checkCollisionEnemy(e8, score);
+	m.checkCollisionEnemy(e9, score);
+	m.checkCollisionEnemy(e10, score);
+	m.checkCollisionEnemy(e11, score);
+	m.checkCollisionEnemy(e12, score);
 
 }
 
@@ -670,13 +651,15 @@ bool endGame() {
 			con.setColor(sf::Color::White);
 			quit.setColor(sf::Color::Red);
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
-			if (con.getColor() == sf::Color::Red)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+			if (con.getColor() == sf::Color::Red){
+				window.close();
 				return true;
-			//or we can do:
-			//return;
-			else
+			}
+			else if(quit.getColor() == sf::Color::Red){
+				window.close();
 				return false;
+			}
 		}
 		window.clear();
 		window.draw(con);
@@ -686,8 +669,15 @@ bool endGame() {
 	window.close();
 }
 
-void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[])
+void restartGame(sf::Text &t, sf::Text &t2, sf::Text &t3, sf::Text &t4, sf::Text &t5, sf::Text &t6, sf::Text &t7, Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy& e4, Enemy& e5, Enemy& e6, Enemy& e7, Enemy& e8, Enemy& e9, Enemy& e10, Enemy& e11, Enemy& e12, Coin coin[])
 {
+	t.setPosition(0, 0);
+	t2.setPosition(0, 29);
+	t3.setPosition(200, 29);
+	t4.setPosition(360, 0);
+	t5.setPosition(360, 29);
+	t6.setPosition(560, 0);
+	t7.setPosition(560, 29);
 
 	e1.setIsDead(false);
 	e1.speedValue = 20;
@@ -768,5 +758,5 @@ void restartGame(Player& m, sf::View& v, Enemy& e1, Enemy& e2, Enemy& e3, Enemy&
 	v.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));// position our view at 0, 0, and 1 and 1 represent that we want to view the full screen vertically and horizontally.
 	m.setIsAlive(true);
 	m.setPosition(5, 300);
-	m.speedValue = 0;
+	m.speedValue = m.getJumpValue() / m.getMarioMass();
 }

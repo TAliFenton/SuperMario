@@ -59,7 +59,7 @@ public:
 	int getRight() { return Right; }
 	int getLeft() { return Left; }
 	bool checkCollisionTile(Tile& p);
-	void checkCollisionEnemy(Enemy& p);
+	void checkCollisionEnemy(Enemy& p, int& score);
 	void update();
 
 	sf::RectangleShape TopRect;
